@@ -3,3 +3,5 @@ node_modules
 package-lock.json
 redis-main.js
 db-main.js
+redis-7.0.11
+redis-7.0.11.tar.gz
