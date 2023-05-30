@@ -5,7 +5,7 @@ import dbClient from '../utils/db';
 export default class UsersController {
   static async postNew(req, res) {
     const email = req.body ? req.body.email : null;
-    console.log(email); // debug
+    // console.log(email); // debug
     const password = req.body ? req.body.password : null;
 
     // email is missing, return an error Missing email with a status code 400
