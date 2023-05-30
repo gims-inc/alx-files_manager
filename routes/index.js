@@ -1,4 +1,5 @@
-import appController from '../controllers/AppController';
+import AppController from '../controllers/AppController';
+import UsersController from '../controllers/UsersController';
 
 const express = require('express');
 
@@ -10,8 +11,10 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get('/status', appController.getStatus);
+router.get('/status', AppController.getStatus);
 
-router.get('/stats', appController.getStats);
+router.get('/stats', AppController.getStats);
+
+router.post('/users', UsersController.postNew);
 
 module.exports = router;
