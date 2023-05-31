@@ -1,21 +1,28 @@
 import AppController from '../controllers/AppController';
 import UsersController from '../controllers/UsersController';
+import AuthController from '../controllers/AuthController';
 
 const express = require('express');
 
-const router = express.Router();
+const api = express.Router();
 
-// middleware that is specific to this router
+// middleware that is specific to this api
 
-router.use((req, res, next) => {
+api.use((req, res, next) => {
   console.log(`Time:${Date.now()} ${req.path} ${req.method}`);
   next();
 });
 
-router.get('/status', AppController.getStatus);
+api.get('/status', AppController.getStatus);
 
-router.get('/stats', AppController.getStats);
+api.get('/stats', AppController.getStats);
 
-router.post('/users', UsersController.postNew);
+api.post('/users', UsersController.postNew);
 
-module.exports = router;
+api.get('/connect', AuthController.getConnect);
+
+api.get('/disconnect', AuthController.getDisconnect);
+
+api.get('/users/me', UsersController.getMe);
+
+module.exports = api;

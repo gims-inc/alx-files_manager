@@ -6,7 +6,7 @@ class DBClient {
     // eslint-disable-next-line radix
     const PORT = parseInt(process.env.DB_PORT);
     const DBNAME = process.env.DB_DATABASE;
-    console.log(`env db name:${DBNAME}`); // debug
+    // console.log(`env db name:${DBNAME}`); // debug
 
     function dbURL(host = 'localhost', port = 27017) {
       const urlStr = `mongodb://${host}:${port}`;
