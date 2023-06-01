@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 import sha1 from 'sha1';
 import { ObjectID } from 'mongodb';
 // eslint-disable-next-line import/no-named-as-default
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
-export default class UsersController {
+class UsersController {
   static async postNew(req, res) {
     const email = req.body ? req.body.email : null;
     // console.log(email); // debug
@@ -66,6 +67,22 @@ export default class UsersController {
     } else {
       res.status(401).json({ error: 'Unauthorized' });
     }
+  }
+
+  static async getUser(req, res) {
+    const token = req.header('X-Token');
+    const key = `auth_${token}`;
+    const userId = await redisClient.get(key);
+    if (userId) {
+      const users = dbClient.db.collection('users');
+      const idObject = new ObjectID(userId);
+      const user = await users.findOne({ _id: idObject });
+      if (!user) {
+        return null;
+      }
+      return user;
+    }
+    return null;
   }
 }
 
