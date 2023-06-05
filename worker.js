@@ -27,7 +27,7 @@ fileQueue.process(async (job, done) => {
     done(new Error('Missing userId'));
   }
 
-  console.log(`worker-js: fileQueue->Processing...${job.jobId}`);
+  console.log('worker-js: fileQueue->Processing...');
   console.log(`worker-js:${fileId}, ${userId}`);
 
   const files = dbClient.db.collection('files');
