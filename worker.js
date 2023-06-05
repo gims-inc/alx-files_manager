@@ -39,19 +39,16 @@ fileQueue.process(async (job, done) => {
       done(new Error('File not found'));
     } else {
       const fileName = file.localPath;
-      const thumbnail500 = await thumbNail(500, fileName);
-      const thumbnail250 = await thumbNail(250, fileName);
-      const thumbnail100 = await thumbNail(100, fileName);
 
       console.log('worker-js: Writing files to system');
 
-      const image500 = `${file.localPath}_500`;
-      const image250 = `${file.localPath}_250`;
-      const image100 = `${file.localPath}_100`;
+      const imageSizes = [500, 250, 100];
+      const thumbnails = await Promise.all(imageSizes.map((size) => thumbNail(size, fileName)));
 
-      await fs.writeFile(image500, thumbnail500);
-      await fs.writeFile(image250, thumbnail250);
-      await fs.writeFile(image100, thumbnail100);
+      // eslint-disable-next-line no-unused-vars
+      const imagePaths = imageSizes.map((size, index) => `${file.localPath}_${size}`);
+      await Promise.all(imagePaths.map((path, index) => fs.writeFile(path, thumbnails[index])));
+
       done();
     }
   });
