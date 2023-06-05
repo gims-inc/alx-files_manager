@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { promises } from 'fs';
+import { promises as fs } from 'fs';
 import { ObjectID } from 'mongodb';
 import mime from 'mime-types';
 import Queue from 'bull';
@@ -9,9 +9,12 @@ import dbClient from '../utils/db';
 import UsersController from './UsersController';
 
 // eslint-disable-next-line no-unused-vars
-const { mkdir, writeFile } = promises;
+// const { mkdir, writeFile } = fs;
 
-const fileQueue = new Queue('fileQueue');
+const redisHost = process.env.REDIS_HOST || '127.0.0.1';
+const redisPort = process.env.REDIS_PORT || 6379;
+
+const fileQueue = new Queue('fileQueue', { redis: { port: redisPort, host: redisHost } });
 
 class FilesController {
   static async postUpload(req, res) {
@@ -81,11 +84,11 @@ class FilesController {
       const buff = Buffer.from(data, 'base64');
       try {
         try {
-          await promises.mkdir(filePath);
+          await fs.mkdir(filePath);
         } catch (error) {
           // pass. Error raised when file already exists
         }
-        await promises.writeFile(fileName, buff, 'utf-8');
+        await fs.writeFile(fileName, buff, 'utf-8');
       } catch (error) {
         console.log(error);
       }
@@ -268,7 +271,7 @@ class FilesController {
           }
           /* By using the module mime-types, get the MIME-type based on the name of the file
             Return the content of the file with the correct MIME-type */
-          const data = await promises.readFile(fileName);
+          const data = await fs.readFile(fileName);
           const contentType = mime.contentType(file.name);
           return res.header('Content-Type', contentType).status(200).send(data);
         } catch (error) {
