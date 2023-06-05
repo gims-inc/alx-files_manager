@@ -7,3 +7,7 @@ redis-7.0.11
 redis-7.0.11.tar.gz
 misc.txt
 image_upload.py
+checker
+*.png
+*.jpeg
+*.jpeg

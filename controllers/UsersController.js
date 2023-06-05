@@ -5,6 +5,14 @@ import { ObjectID } from 'mongodb';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
+const Queue = require('bull');
+
+const redisHost = process.env.REDIS_HOST || '127.0.0.1';
+const redisPort = process.env.REDIS_PORT || 6379;
+// const intervalInMilli = 1000; // 1000 milliseconds;
+
+const userQueue = new Queue('userQueue', { redis: { port: redisPort, host: redisHost } });
+
 class UsersController {
   static async postNew(req, res) {
     const email = req.body ? req.body.email : null;
@@ -33,6 +41,7 @@ class UsersController {
           { email, password: hashedPassword },
         ).then((result) => {
           res.status(201).json({ id: result.insertedId, email });
+          userQueue.add({ userId: result.insertedId });
         }).catch((error) => console.log(error));
       }
     });
