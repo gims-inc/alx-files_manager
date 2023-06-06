@@ -2,7 +2,7 @@ const express = require('express');
 
 const server = express();
 const port = 5000;
-server.use(express.json({ limit: '50mb' }));
+server.use(express.json({ limit: '10mb' }));
 
 const apiRoutes = require('./routes/index');
 
