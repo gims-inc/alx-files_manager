@@ -29,6 +29,7 @@ class FilesController {
     const { parentId } = req.body;
     const isPublic = req.body.isPublic || false;
     const { data } = req.body;
+    //  same as (req.body.name, req.body.type)
     if (!name) {
       return res.status(400).json({ error: 'Missing name' });
     }
@@ -235,7 +236,7 @@ class FilesController {
     const idObject = new ObjectID(id);
     const newValue = { $set: { isPublic: false } };
     const options = { returnOriginal: false };
-    files.findOneAndUpdate({ id: idObject, userId: user._id }, newValue, options, (err, file) => {
+    files.findOneAndUpdate({ _id: idObject, userId: user._id }, newValue, options, (err, file) => {
       if (!file.lastErrorObject.updatedExisting) {
         return res.status(404).json({ error: 'Not found' });
       }
