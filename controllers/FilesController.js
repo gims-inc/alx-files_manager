@@ -214,15 +214,17 @@ class FilesController {
     const files = dbClient.db.collection('files');
     const idObject = new ObjectID(id);
     const newValue = { $set: { isPublic: true } };
-    const options = { returnDocument: 'after' };
+    const options = { returnOriginal: false };
     // f no file document is linked to the user and the ID passed as parameter,
     // return an error Not found with a status code 404
-    files.findOneAndUpdate({ _id: idObject, userId: user._id }, newValue, options, (err, file) => {
-      if (!file.lastErrorObject.updatedExisting) {
-        return res.status(404).json({ error: 'Not found' });
-      }
-      return res.status(200).json(file.value);
-    });
+    await files.findOneAndUpdate(
+      { _id: idObject, userId: user._id }, newValue, options, (err, file) => {
+        if (!file.lastErrorObject.updatedExisting) {
+          return res.status(404).json({ error: 'Not found' });
+        }
+        return res.status(200).json(file.value);
+      },
+    );
     return null;
   }
 
@@ -235,13 +237,15 @@ class FilesController {
     const files = dbClient.db.collection('files');
     const idObject = new ObjectID(id);
     const newValue = { $set: { isPublic: false } };
-    const options = { returnDocument: 'after' };
-    files.findOneAndUpdate({ _id: idObject, userId: user._id }, newValue, options, (err, file) => {
-      if (!file.lastErrorObject.updatedExisting) {
-        return res.status(404).json({ error: 'Not found' });
-      }
-      return res.status(200).json(file.value);
-    });
+    const options = { returnOriginal: false };
+    await files.findOneAndUpdate(
+      { _id: idObject, userId: user._id }, newValue, options, (err, file) => {
+        if (!file.lastErrorObject.updatedExisting) {
+          return res.status(404).json({ error: 'Not found' });
+        }
+        return res.status(200).json(file.value);
+      },
+    );
     return null;
   }
 
