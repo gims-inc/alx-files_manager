@@ -217,10 +217,10 @@ class FilesController {
     // const options = { returnOriginal: false };
     // if no file document is linked to the user and the ID passed as parameter,
     // return an error Not found with a status code 404
-    await files.findOneAndUpdate(
+    files.findOneAndUpdate(
       { _id: ObjectID(id), userId: user._id },
       { $set: { isPublic: true } },
-      { returnDocument: 'after' },
+      { returnOriginal: false },
       (err, file) => {
         if (!file.lastErrorObject.updatedExisting) {
           return res.status(404).json({ error: 'Not found' });
@@ -241,10 +241,10 @@ class FilesController {
     // const idObject = new ObjectID(id);
     // const newValue = { $set: { isPublic: false } };
     // const options = { returnOriginal: false };
-    await files.findOneAndUpdate(
+    files.findOneAndUpdate(
       { _id: ObjectID(id), userId: user._id },
       { $set: { isPublic: false } },
-      { returnDocument: 'after' },
+      { returnOriginal: false },
       (err, file) => {
         if (!file.lastErrorObject.updatedExisting) {
           return res.status(404).json({ error: 'Not found' });
